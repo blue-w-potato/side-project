@@ -9,7 +9,7 @@ class screen_set():
         self.size = [self.width, self.height]
         self.name = '2048' 
         self.back_color = [195, 195, 195]
-        self.fps = 1000
+        self.fps = 10
 
 screen_sets = screen_set() 
 
@@ -45,32 +45,8 @@ for i in range( 1, len(LOAD_PICTURES) ):
     pictures[i] = PICTURE( pictures[i-1], LOAD_PICTURES[i], None )
     pictures[i-1].next = pictures[i]
 
-
-# 角色圖片設定
-class Player(pygame.sprite.Sprite): 
-    def __init__(self, size, color, xy):
-        pygame.sprite.Sprite.__init__(self) 
-        self.image = pictures[0] 
-        self.x = screen_sets.width/2
-        self.y = screen_sets.height/2
-
-all_sprites = pygame.sprite.Group()
-
-#角色一相關設定
-class Player_1_sets():
-    def __init__(self):
-        self.width = 40
-        self.height = 40
-        self.size = [self.width, self.height]
-        self.color = [0, 0, 0]
-        self.xy = [screen_sets.height-1, 0]
-
-player_1_sets = Player_1_sets() 
-player_1 = Player(size = player_1_sets.size, color = player_1_sets.color,  xy = player_1_sets.xy)
-all_sprites.add(player_1) 
-
 #遊戲主迴圈
-p = pygame.image.load(os.path.join('numbers', '2.png')).convert()
+p = pygame.image.load(os.path.join('numbers', '8.png')).convert()
 running = True
 k = 0
 
@@ -88,9 +64,8 @@ while running:
         k = 0
 
     #畫面顯示
-    screen.blit(p , ( 0, 0 ))
+    screen.blit(p , ( screen_sets.width/2, screen_sets.height/2 ))
     screen.fill(screen_sets.back_color)
-    all_sprites.update() 
     pygame.display.update()
 
 pygame.quit() 
