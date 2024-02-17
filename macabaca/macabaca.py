@@ -90,20 +90,20 @@ t.end_fill()
 t.penup()
 
 #嘴巴
-a = ( 60 ) / (200**2)
+a = ( 10 ) / (200**2)
 t.goto(-200, 0)
 t.pendown()
 x, y = -200, 0
 while t.pos()!= (200, 0):
     x = round(x+0.5, 4)
-    y = round( a* (x**2)-60, 4)
+    y = round( a* (x**2)-10, 4)
     t.goto((x,y))
 t.penup()
-a = ( 160 ) / (200**2)
+a = ( 110 ) / (200**2)
 t.goto(-200, 0)
 t.pendown()
 x, y = -200, 0
 while t.pos()!= (200, 0):
     x = round(x+0.5, 4)
-    y = round( a* (x**2)-160, 4)
+    y = round( a* (x**2)-110, 4)
     t.goto((x,y))
