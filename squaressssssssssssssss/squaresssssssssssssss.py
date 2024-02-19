@@ -1,27 +1,19 @@
 import turtle as t
+t.colormode(255)
 t.shape('turtle')
-t.speed('slow')
-class sin:
-    sin75 = (6**0.5 + 2**0.5)/4
-def three_edges(long):
-    for i in range(3):
-        t.forward(long)
+t.speed('fastest')
+def square(n):
+    for i in range(4):
+        t.forward(n)
         t.left(90)
 def main(n):
     while True:
-        print(n)
-        t.left(15)
-        t.forward(n)
-        t.left(90)
-        n2 = n*0.8/sin.sin75
-        three_edges(n2)
-        n = n2+0
-def start(n):
-    three_edges(n)
-    t.forward(n)
-    t.left(90)
-    main(n = n*sin.sin75)
-t.penup()
-t.goto(-300, -300)
-t.pendown()
-start(600)
+        #turn left 15
+        square(n)
+        t.penup()
+        t.left(180)
+        t.forward(round(n*0.08748866352, 20))#tan 5度
+        t.right(90)
+        t.pendown()
+        n = round(n / 0.99619469809, 20)
+main(100)
