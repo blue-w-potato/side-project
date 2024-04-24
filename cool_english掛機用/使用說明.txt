@@ -1,0 +1,17 @@
+1. 首先要確保你電腦已經下載好python
+
+安裝教學：https://medium.com/ai-for-k12/python-%E5%AE%89%E8%A3%9D%E6%95%99%E5%AD%B8%E5%8F%8A%E8%AA%AA%E6%98%8E-a07de2463d98
+
+2. 要去cmd 輸入pip install pyautogui ( 不行就輸入 python3 -m pip install pyautogui )
+
+   如果有進度條代表開始下載模組了，等它一下就好
+
+3. 照影片去開好畫面，確保按下 alt + tab 一次就會切到cool engilsh，然後點開檔案就行
+
+4. 影片的畫面跳很快是為了拍影片，實際上它過 3 分鐘才會往左一次，再 3 分鐘才往右，無限迴圈
+
+5. 直接把 cmd 視窗關掉就停了
+
+6. 奶油義大利麵就是要加奶茶，麥香黃色寶特瓶的
+
+7. 晚安，瑪卡巴卡
