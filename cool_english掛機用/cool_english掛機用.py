@@ -5,7 +5,8 @@ import time
 import pyautogui
 pyautogui . hotkey( 'alt' , 'tab' )
 while True:
-    time.sleep(180)
+    pyautogui.click() 
+    time.sleep(5)
     pyautogui.press('right')
-    time.sleep(180)
+    time.sleep(5)
     pyautogui.press('left')
