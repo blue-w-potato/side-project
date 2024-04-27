@@ -30,6 +30,13 @@ class main:
     main_array_copy = main_array.copy()
     changed = False
     
+    def check():
+        # 檢查
+        if main.changed:
+            main.new_number()
+        else:
+            main.main_array = main.main_array_copy.copy()
+            print( "\n動不了\n" )
     
     def new_number():
         # 新增數字
@@ -77,6 +84,8 @@ class main:
                                 now -= 1
                                 if now <= 0:
                                     break
+        # 檢查
+        main.check()
     
     def go_right(): 
         # 備份 main_array ， 用來檢查能不能動
@@ -110,6 +119,8 @@ class main:
                                 now += 1
                                 if now >= 3:
                                     break
+        # 檢查
+        main.check()
     
     def go_up():
         # 備份 main_array ， 用來檢查能不能動
@@ -143,6 +154,8 @@ class main:
                                 now -= 1
                                 if now <= 0:
                                     break
+        # 檢查
+        main.check()
     
     def go_down():
         # 備份 main_array ， 用來檢查能不能動
@@ -176,6 +189,8 @@ class main:
                                 now += 1
                                 if now >= 3:
                                     break
+        # 檢查
+        main.check()
     
     def output():
         print()
@@ -186,14 +201,6 @@ class main:
                 print(f'{j:^5}', end = '|')
             print()
         print()
-            
-    def check():
-        # 檢查
-        if main.changed:
-            main.new_number()
-        else:
-            main.main_array = main.main_array_copy.copy()
-            print( "\n動不了\n" )
             
     def game_over():
         # 試能不能往左或往右
@@ -251,7 +258,7 @@ while running:
             print("\n你發現了彩蛋\n")
         
         # 如果不照規則亂輸入
-        if not( move in "8426" ):
+        if not( move in "8426" ) or not move:
             print( "操作說明：" )
             print( "" )
             print( "輸入 \"8\" 是 \"往上\"" )
@@ -279,8 +286,6 @@ while running:
         if move == '2':
             main.go_down()
         
-        # 檢查
-        main.check()
             
         # 輸出
         main.output()
