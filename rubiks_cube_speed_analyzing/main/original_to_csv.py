@@ -1,9 +1,8 @@
-import os
-
 def main():
+    from os import listdir
     
     # 取得目錄中的檔案清單
-    data_name = os.listdir( "main\original_data" )
+    data_name = listdir( "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzing\\main\\original_data" )
 
     # 讀取原始資料
     original_data = open( encoding = "utf-8", mode = "r", file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzing\\main\\original_data\\" + data_name[0] )
