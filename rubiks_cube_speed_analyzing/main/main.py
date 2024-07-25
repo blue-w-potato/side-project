@@ -10,28 +10,38 @@ screen.geometry ("1024x768")
 fig = plt.figure( figsize = ( 10, 7 ), dpi = 100 )
 table = FigureCanvasTkAgg( fig, screen )
 table.get_tk_widget().place( x = 200, y = 150 )
-plt.grid( True )
-plt.scatter( x = [], y = [] )
-table.draw()
 
 # 建立csv檔
 import original_to_csv
 original_to_csv.main()
 
 # 繪製圖表
-import draw_original_table
-def button_command( Category ):
-    data = draw_original_table.get_data( Category = Category )# ( times -> list, speeds -> list )
-    plt.scatter( x = data[0], y = data[1] )
-    table.draw()
-    
+import get_original_data
+
 # 一排選擇單手、雙手之類的按鈕
-Categorys = draw_original_table.get_Categorys()
+Categorys = get_original_data.get_Categorys()
 fig_types_button = []
-for i in range( len(Categorys) ):
-    fig_types_button.append( tk.Button( screen, text = Categorys[i], bg = "lightblue", width = 10, command = button_command( Categorys[i] ) ) )
-    fig_types_button[-1].place( x = 300, y = 0 + i * 30 )
-    
+Category = 0
+
+def button_command(selected_category):
+    global fig_types_button
+    data = get_original_data.get_data(Category=selected_category)  # (times -> list, speeds -> list)
+    plt.clf()
+    plt.scatter(x=data[0], y=data[1])
+    plt.xlabel("Speed")
+    plt.ylabel("Time")
+    plt.grid( True )
+    table.draw()
+
+for i, category in enumerate(Categorys):
+    fig_types_button.append(tk.Button(
+        screen,
+        text=category,
+        bg="lightblue",
+        width=10,
+        command=lambda cat=category: button_command(cat)
+    ))
+    fig_types_button[-1].place(x=300, y=0 + i * 30)
 
 
 screen.mainloop()
