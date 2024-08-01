@@ -10,11 +10,11 @@ def show_datas( screen, data:np.ndarray ):
                          bg = "yellow"))
     
     Lables.append(tk.Label(screen,
-                     text = f"最好成績：{data.max()}",
+                     text = f"最差成績：{data.max()}",
                      bg = "yellow"))
     
     Lables.append(tk.Label(screen,
-                         text = f"最差成績：{data.min()}",
+                         text = f"最好成績：{data.min()}",
                          bg = "yellow"))
 
     Lables.append(tk.Label(screen,
