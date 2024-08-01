@@ -5,7 +5,7 @@ import title
 class main:
     Categorys = [ plt.scatter, plt.plot ]
     Categorys_name = [ "散布圖", "折線圖" ]
-    def main( screen, data, table ):
+    def main( Category, screen, data, table ):
         
         Buttons = []
         for i in range( len(main.Categorys) ):
@@ -13,19 +13,24 @@ class main:
                                       text = main.Categorys_name[i],
                                       bg = "red",
                                       width=10,
-                                      command=lambda cat = i: main.button_command(screen, cat, data, table)
+                                      command=lambda cat = i: main.button_command(Category, screen, cat, data, table)
                                       ) ) 
-            Buttons[-1].place( x=600, y=0 + i * 30 )
+            Buttons[-1].place(x=200 + i*100, y=850)
     
     
-    def button_command( screen, Cat, data, table ):
+    def button_command( Category, screen, Cat, data, table ):
         plt.clf()
         main.Categorys[Cat](data[0],data[1])
-        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzing\\main\\title\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
+        with open( file = "main\\title\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
+            print( main.Categorys_name[Cat], end = "", file = txt )
+        
+        with open( file = "main\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
             print( main.Categorys_name[Cat], end = "", file = txt )
         plt.xlabel("Speed")
         plt.ylabel("Time")
         plt.grid( True )
+        # import Linear_Regression
+        # Linear_Regression.main( Category, table )
         table.draw()
         title.main( screen )
     

@@ -14,8 +14,10 @@ class main:
             with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzing\\main\\title\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
                 print( "--------- ", end = "", file = txt )
             title.main( screen )
+            import datas
+            datas.show_datas( screen, data[1] )
             import Canva_type_Buttons
-            Canva_type_Buttons.main.main( screen, data, table )
+            Canva_type_Buttons.main.main( selected_category, screen, data, table )
             
             
     def main( screen, table):
@@ -27,4 +29,4 @@ class main:
                 width=10,
                 command=lambda cat=category: main.button_command(cat, table, screen)
             ))
-            main.fig_types_button[-1].place(x=300, y=0 + i * 30)
+            main.fig_types_button[-1].place(x=200 + i*100, y=120)

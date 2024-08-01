@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 read_data = None
 def get_Categorys() -> list:
@@ -12,9 +13,8 @@ def get_Categorys() -> list:
 def get_data( Category ) -> tuple:
     import matplotlib.pyplot as plt
     data = list(read_data[ "Time(millis)" ][[read_data[ "Category" ][i] == Category for i in range( 1, 1+read_data["Category"].size )]])
-    data = pd.Series( data, index = [ i for i in range(len(data)) ] )
-    for i in range( data.size ):
-        data[i] /= 1000
-    return ([ i for i in range( 1, 1+data.size ) ], data)
+    data = pd.array( data)
+    data /= 1000
+    return ( np.array( range(data.size) ), data)
     
 
