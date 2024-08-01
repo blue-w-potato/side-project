@@ -28,15 +28,16 @@ import Linear_Regression
 open = False
 txt = "線性回歸：按我沒用，還沒修好"
 def Button_command():
-    global open, txt
-    if open:
-        Linear_Regression.click_to_close( table )
-        open = False
-        txt = "線性回歸：隱藏" 
-    else:
-        Linear_Regression.click_to_open(  table )
-        open = True
-        txt = "線性回歸：顯示" 
+    pass
+    # global open, txt
+    # if open:
+    #     Linear_Regression.click_to_close( table )
+    #     open = False
+    #     txt = "線性回歸：隱藏" 
+    # else:
+    #     Linear_Regression.click_to_open(  table )
+    #     open = True
+    #     txt = "線性回歸：顯示" 
         
 Button = tk.Button(screen,
                        text = txt,
