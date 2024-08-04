@@ -9,9 +9,9 @@ class main:
     
     def button_command(selected_category, table, screen):
             data = get_original_data.get_data(selected_category)  # (times -> list, speeds -> list)
-            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzing\\main\\title\\Category.txt", mode = "wt", encoding = "utf-8" ) as txt:
+            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\title\\Category.txt", mode = "wt", encoding = "utf-8" ) as txt:
                 print( selected_category, end = "", file = txt )
-            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzing\\main\\title\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
+            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\title\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
                 print( "--------- ", end = "", file = txt )
             title.main( screen )
             import datas

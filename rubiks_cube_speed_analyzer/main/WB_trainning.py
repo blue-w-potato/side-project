@@ -13,12 +13,12 @@ def cost_function( x, y, w, b ):
 
 def gradient_descent( Category ):
     data = get_data( Category )
-    x = np.array(data[0])
-    y = np.array(data[1])
+    x = data[0]
+    y = data[1]
     
-    w, b = 0, 0
+    w, b = 0, y.mean()
     Learning_rate = 1.0e-10
-    run_iter =  y.sum() / y.size +3
+    run_iter =  10
     n_cost = cost_function( x, y, w, b )
     speed = 1
 
@@ -44,7 +44,7 @@ def gradient_descent( Category ):
             Learning_rate *= (1.5 * speed)
             speed += 0.5
         
-        print( f"w={w}\tb={b}\tcost={cost}\tLearning_rate={Learning_rate}\trun_iter{run_iter}" )
+        print( f"cost={cost}\trun_iter = {run_iter}" )
         
 
 def Trainning():
@@ -54,5 +54,5 @@ def Trainning():
         a = gradient_descent( Category )
         print( "finish" )
         datas += a
-    with open( file = "main\\WBs.txt", mode = "wt", encoding = "utf-8" ) as txtfile:
+    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\WBs.txt", mode = "wt", encoding = "utf-8" ) as txtfile:
         print( datas, end = "", file = txtfile )
