@@ -11,7 +11,7 @@ class block:
         self.visited = visited
 
 
-SIZE = 30 # 20*20 的迷宮
+SIZE = 50 #  迷宮大小
 BLOCK_SIZE = 20 # 方塊大小 
 
 # UI
@@ -20,7 +20,7 @@ screen.geometry( str( BLOCK_SIZE*(SIZE+3) ) + "x" + str( BLOCK_SIZE*(SIZE) ) )
 screen.title = "MAZE"
 graph = []
 player, player_x, player_y = None, None, None
-
+end_messnge = None
 
 # 生成地圖
 def dfs( x, y ):
@@ -47,22 +47,17 @@ def dfs( x, y ):
             continue
         dfs(*i)
 
-visited = []; Lables = []
-def draw( root:block ):
-        global visited, Lables, BLOCK_SIZE, screen
-        if root is None:
-            return 
-        if root.end:
-            return 
-        Lables.append( tk.Label(screen,
-                text = "起" if root.x == root.y == 0 else ("牆" if root.wall else "路"),
-                bg = "orange" if root.wall else "lightgreen"
-                ) )
-        Lables[-1].place( x = root.x, y = root.y )
-        visited.append( root )
-        for i in root.udlr:
-            if not (i is None) and not (i in visited):
-                draw( i )
+Lables = []
+def draw():
+        global  Lables, SIZE, screen, graph
+        for i in range( SIZE ):
+            for j in range( SIZE ):
+                root = graph[i][j]
+                Lables.append( tk.Label(screen,
+                        text = "起" if root.x == root.y == 0 else ("牆" if root.wall else "路"),
+                        bg = "orange" if root.wall else "lightgreen"
+                        ) )
+                Lables[-1].place( x = root.x, y = root.y )
 
 def bulid_map():
     global screen, graph
@@ -95,12 +90,13 @@ def bulid_map():
     
     dfs( 0, 0 )
     root = graph[0][0]
+    graph[-1][-1].wall = False
     
 
     visited = []
     Lables = []
     
-    draw( root )
+    draw()
 
     Lables.append( tk.Label(screen,
                 text = "終",
@@ -113,15 +109,25 @@ def bulid_map():
     player_x = 0
     player_y = 0
     player.place( x=player_x*BLOCK_SIZE, y = player_y*BLOCK_SIZE )
+    global end_messnge
+    end_messnge = tk.Label( screen, text = "你贏了", bg = "yellow", font=('Arial',50) )
+    end_messnge.forget()
+
+def replay():
+    global end_messnge
+    end_messnge.forget()
+    bulid_map()
 
     
 bulid_map()
-bulid = tk.Button(screen, text="重新生成", bg = "yellow", command=bulid_map)
+bulid = tk.Button(screen, text="重新生成", bg = "yellow", command=replay)
 bulid.place( x = BLOCK_SIZE*(SIZE), y = BLOCK_SIZE*(SIZE-1) )
+end_messnge.pack()
+end_messnge.forget()
 
 def end():
-    a = tk.Label( screen, text = "你贏了", bg = "yellow", font=('Arial',50) )
-    a.pack()
+    global end_messnge
+    end_messnge.pack()
 
 def go( key ):
     global player_x, player_y
@@ -133,16 +139,19 @@ def go( key ):
     if turn == 38: newy = player_y - 1; newx = player_x+0
     if turn == 40: newy =player_y + 1; newx = player_x+0
     if newx<0 or newx>SIZE-1:
+        print("撞牆")
         return
     if newy<0 or newy>SIZE-1:
+        print("撞牆")
         return
     if graph[newx][newy].wall:
+        print("撞牆")
         return
-    if graph[newx][newy].end:
-        end()
     player_x, player_y = newx, newy
     player.place( x=player_x*BLOCK_SIZE, y = player_y*BLOCK_SIZE )
     print( player_x, player_y )
+    if player_x+1 == player_y+1 == SIZE:
+        end()
     return
 player.focus_set()
 player.bind( "<Key>", go )
