@@ -105,13 +105,6 @@ def bulid_map():
     Lables[-1].place( x = BLOCK_SIZE*(SIZE-1), y = BLOCK_SIZE*(SIZE-1) )
     global player, player_x, player_y
     # 角色
-    player = tk.Label( screen, text = ": )", bg = "lightblue" )
-    player_x = 0
-    player_y = 0
-    player.place( x=player_x*BLOCK_SIZE, y = player_y*BLOCK_SIZE )
-    global end_messnge
-    end_messnge = tk.Label( screen, text = "你贏了", bg = "yellow", font=('Arial',50) )
-    end_messnge.forget()
 
 def replay():
     global end_messnge
