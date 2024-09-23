@@ -3,9 +3,6 @@ from random import choice
 
 class block( tk.Label ):
     
-    # 絕對位置
-    x = 0
-    y = 0
     # 是不是牆壁
     wall = True
     # 是不是終點
@@ -17,25 +14,23 @@ class build():
     
     graph = []
     
-    def init( self, ui, size, blocksize ):
+    def init( self, ui, size ):
         self.graph = []
         for i in range( size ):
             self.graph.append([])
             for j in range( size ):
-                self.graph[-1].append(block( ui, text = "牆", bg = "orange", font =  ("MingLiU", 15 ) ) )
-                self.graph[-1][-1].x = j*blocksize
-                self.graph[-1][-1].y = i*blocksize
+                self.graph[-1].append(block( ui, text = "　", bg = "green", font =  ("MingLiU", 80 ) ) )
         self.graph[-1][-1].end = True
 
     def dfs( self, x, y, size ):
         if x==y==0:
-            self.graph[x][y].config( text = "起", bg = "lightgreen",font =  ("MingLiU", 15 ) )
+            self.graph[x][y].config( text = "　", bg = "white",font =  ("MingLiU", 80 ) )
         else:
-            self.graph[x][y].config( text = "路", bg = "lightgreen",font =  ("MingLiU", 15 ) )
+            self.graph[x][y].config( text = "　", bg = "white",font =  ("MingLiU", 80 ) )
         self.graph[x][y].wall = False
         self.graph[x][y].visited = True
         if self.graph[x][y].end:
-            self.graph[x][y].config( text = "終", bg = "lightgreen",font =  ("MingLiU", 15 ) )
+            self.graph[x][y].config( text = "　", bg = "red",font =  ("MingLiU", 80 ) )
             return
         next = []
         if x>0:next.append( (x-1,y,size) )

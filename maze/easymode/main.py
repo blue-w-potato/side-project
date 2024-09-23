@@ -5,8 +5,8 @@ import sys
 import time
 
 class main:
-    SIZE = 20
-    BLOCK_SIZE = 30
+    SIZE = 50
+    BLOCK_SIZE = 20
     SHOW_SIZE = 5
     UI_SIZE = BLOCK_SIZE*SIZE
     test_mode = False
@@ -18,7 +18,7 @@ class main:
     except:
         pass
     ui = UI.UI()
-    player = tk.Label( ui, text = ":))", font=('Arial',15), bg = "lightblue" )
+    player = tk.Label( ui, text = ":))", font=('Arial',10), bg = "lightblue" )
     player_x = 0
     player_y = 0
     graph = build.build()
@@ -33,7 +33,7 @@ class main:
         main.ui.mainloop()
     
     def go( key, graph ):
-        print(key.keycode, key.keysym)
+        print(key.keysym)
         turn = key.keycode
         newx = 0
         newy = 0
@@ -58,12 +58,6 @@ class main:
     
     def running( ui, BLOCK_SIZE, graph ):
         main.ui.show_all(graph)
-        print("="*50)
-        for i in graph:
-            for j in i:
-                
-                print(f"{j.wall:5}", end = "|")
-            print()
         main.player.place( x=main.player_x*BLOCK_SIZE, y = main.player_y*BLOCK_SIZE )
         main.player.lift()
         main.player.focus_set()
