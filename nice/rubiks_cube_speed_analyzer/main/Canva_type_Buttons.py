@@ -21,10 +21,10 @@ class main:
     def button_command( Category, screen, Cat, data, table ):
         plt.clf()
         main.Categorys[Cat](data[0],data[1])
-        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\title\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
+        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\title\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
             print( main.Categorys_name[Cat], end = "", file = txt )
         
-        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
+        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\Canva_type.txt", mode = "wt", encoding = "utf-8" ) as txt:
             print( main.Categorys_name[Cat], end = "", file = txt )
         plt.xlabel("Speed")
         plt.ylabel("Time")

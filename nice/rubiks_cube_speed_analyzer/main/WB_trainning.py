@@ -54,5 +54,5 @@ def Trainning():
         a = gradient_descent( Category )
         print( "finish" )
         datas += a
-    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\WBs.txt", mode = "wt", encoding = "utf-8" ) as txtfile:
+    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\WBs.txt", mode = "wt", encoding = "utf-8" ) as txtfile:
         print( datas, end = "", file = txtfile )

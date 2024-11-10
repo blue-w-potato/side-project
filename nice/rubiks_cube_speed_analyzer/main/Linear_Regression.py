@@ -53,7 +53,7 @@ def main( Category, table ):
     x = data[0]
     y = data[1]
     
-    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\WBs.txt", mode = "r", encoding = "utf-8" ) as file:
+    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\WBs.txt", mode = "r", encoding = "utf-8" ) as file:
         datas = list(map(lambda x:x[:-2].split(), file.readlines()))
         w, b, Learning_rate = map(float,datas[n])
     
@@ -63,16 +63,16 @@ def main( Category, table ):
     
 def click_to_open(table):
     
-    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\title\\Category.txt", mode = "r", encoding = "utf-8" ) as txt:
+    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\title\\Category.txt", mode = "r", encoding = "utf-8" ) as txt:
         Category = txt.read()
     main( Category, table )
     
 def click_to_close(table):
     
     plt.clf()
-    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\title\\Category.txt", mode = "r", encoding = "utf-8" ) as txt:
+    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\title\\Category.txt", mode = "r", encoding = "utf-8" ) as txt:
         Category = txt.read()
-    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\title\\Canva_type.txt", mode = "r", encoding = "utf-8" ) as txt:
+    with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\title\\Canva_type.txt", mode = "r", encoding = "utf-8" ) as txt:
         Canva_type = txt.read()
     
     data = get_data( Category )
@@ -87,23 +87,23 @@ class button:
     txt = "線性回歸"
     def Button_command(screen, table):
         
-        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "r", encoding = "utf-8" ) as file:
+        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "r", encoding = "utf-8" ) as file:
             Open = int(file.read())
             
         if Open:
-            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "wt", encoding = "utf-8" ) as file:
+            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "wt", encoding = "utf-8" ) as file:
                 print( "0", end = "", file = file )
             click_to_close( table )
             Open = 0
             button.txt = "線性回歸" 
         else:
-            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "wt", encoding = "utf-8" ) as file:
+            with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "wt", encoding = "utf-8" ) as file:
                 print( "1", end = "", file = file )
             click_to_open(  table )
             Open = 1
             button.txt = "線性回歸" 
     def set_button( screen, table ):
-        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "wt", encoding = "utf-8" ) as file:
+        with open( file = "C:\\Users\\88690\\Desktop\\side-project\\nice\\rubiks_cube_speed_analyzer\\main\\line_show.txt", mode = "wt", encoding = "utf-8" ) as file:
             print( "0", end = "", file = file )
         Button = tk.Button(screen,
                             text = button.txt,
