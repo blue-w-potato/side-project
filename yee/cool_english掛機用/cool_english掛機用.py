@@ -3,7 +3,7 @@
 
 import time
 import pyautogui
-pyautogui . hotkey( 'alt' , 'tab' )
+pyautogui.hotkey( 'alt' , 'tab' )
 while True:
     pyautogui.click() 
     time.sleep(5)
