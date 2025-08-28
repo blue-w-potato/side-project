@@ -3,6 +3,7 @@ import time
 
 pyautogui.hotkey( 'alt' , 'tab' )
 pyautogui.click()
+pyautogui.press('shift')
 pyautogui.press('e')
 
 while True:
