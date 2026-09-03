@@ -1,0 +1,45 @@
+project/                                  ← 根目錄(Android Studio 開啟這一層)
+├── settings.gradle.kts                   ← 根層 Gradle 設定
+├── build.gradle.kts                      ← 根層 Gradle 設定(套件版本)
+├── CONTEXT.md                            ← 詞彙表(不是程式碼,參考用)
+├── README.md                             ← 進度說明
+├── docs/adr/                             ← 4 篇架構決策紀錄
+│   ├── 0001-使用無障礙服務作為手勢模擬機制.md
+│   ├── 0002-元件位置採用相對座標並於儲存時轉換.md
+│   ├── 0003-儲存腳本時偵測並阻擋循環引用.md
+│   └── 0004-腳本資料採用room本地資料庫儲存.md
+│
+└── app/                                  ← App 模組
+    ├── build.gradle.kts                  ← App 模組的 Gradle 設定(依賴套件)
+    └── src/main/
+        ├── AndroidManifest.xml
+        ├── res/xml/
+        │   └── accessibility_service_config.xml
+        └── java/com/scriptauto/app/      ← Kotlin 原始碼(依套件分層)
+            ├── MainActivity.kt
+            ├── PermissionGate.kt
+            ├── ScriptAutoApp.kt
+            ├── accessibility/
+            │   └── AutomationAccessibilityService.kt
+            ├── data/
+            │   ├── Models.kt
+            │   ├── Database.kt
+            │   ├── ScriptRepository.kt
+            │   └── ScriptValidation.kt
+            ├── service/
+            │   ├── FloatingControlService.kt
+            │   └── FloatingOverlayController.kt
+            └── ui/                        ← 畫面(共 13 個檔案)
+                ├── ComingSoonScreen.kt
+                ├── ComponentIcon.kt
+                ├── EditorScreen.kt
+                ├── EditorViewModel.kt
+                ├── EditorViewModelFactory.kt
+                ├── HomeScreen.kt
+                ├── LeftPanel.kt
+                ├── Navigation.kt
+                ├── NewScriptOrientationScreen.kt
+                ├── PropertyPopup.kt
+                ├── ScriptListScreen.kt
+                ├── ScriptListViewModel.kt
+                └── SequencePanel.kt
