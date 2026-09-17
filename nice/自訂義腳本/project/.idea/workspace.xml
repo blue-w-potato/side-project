@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e0d96a30-bb77-40b0-a2ef-f22185aa1f88" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../docs/ai給/問/0001-使用無障礙服務作為手勢模擬機制.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/ai給/問/0002-元件位置採用相對座標並於儲存時轉換.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/ai給/問/0003-儲存腳本時偵測並阻擋循環引用.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/ai給/問/0004-腳本資料採用room本地資料庫儲存.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/ai給/問/CONTEXT.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/ai給/生/架構.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/給ai/grill-with-docs-指南.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/給ai/計畫 3c25b728d013808f9cfef8fea308710c.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONTEXT.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/MainActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/PermissionGate.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ScriptAutoApp.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/accessibility/AutomationAccessibilityService.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/data/Database.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/data/Models.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/data/ScriptRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/data/ScriptValidation.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/service/FloatingControlService.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/service/FloatingOverlayController.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/ComingSoonScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/ComponentIcon.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/EditorScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/EditorViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/EditorViewModelFactory.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/HomeScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/LeftPanel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/Navigation.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/NewScriptOrientationScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/PropertyPopup.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/ScriptListScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/ScriptListViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scriptauto/app/ui/SequencePanel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/accessibility_service_config.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/adr/0001-使用無障礙服務作為手勢模擬機制.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/adr/0002-元件位置採用相對座標並於儲存時轉換.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/adr/0003-儲存腳本時偵測並阻擋循環引用.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/adr/0004-腳本資料採用room本地資料庫儲存.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="3IoXok2x8j6FMp1eWXiAapaJaG2" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "android.gradle.sync.needed": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/wame2/OneDrive/Desktop/GitHub/Public/side-project/nice/自訂義腳本/project/build.gradle.kts"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e0d96a30-bb77-40b0-a2ef-f22185aa1f88" name="Changes" comment="" />
+      <created>1788432073217</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1788432073217</updated>
+    </task>
+    <servers />
+  </component>
+</project>

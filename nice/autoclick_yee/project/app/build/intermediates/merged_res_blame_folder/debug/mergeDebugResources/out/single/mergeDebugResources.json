@@ -1,0 +1,6 @@
+[
+    {
+        "merged": "com.scriptauto.app-debug-51:/xml_accessibility_service_config.xml.flat",
+        "source": "com.scriptauto.app-main-53:/xml/accessibility_service_config.xml"
+    }
+]
