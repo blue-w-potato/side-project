@@ -5,7 +5,20 @@ import datetime
 
 def scrap_nfu_to_csv():
     def __scrap_to_csv() -> None:
-        this_month = datetime.datetime.today().date().month
+        today = datetime.datetime.today().date()
+        monthdays = [0, 31, 28, 31, 30, 31, 30, 31,
+                     31, 30, 31, 30, 31]
+        if today.year%400==0 or today.year%4==0 and today.year%100!=0:
+            monthdays[2] = 29
+        
+        stopyear, stopmonth, stopday = 0,0,0
+        if today.day >= 7:
+            stopyear, stopmonth, stopday = today.year, today.month, today.day-6
+        elif today.month > 1:
+            stopyear, stopmonth, stopday = today.year, today.month, monthdays[today.month-1]+today.day-6
+        else:
+            stopyear, stopmonth, stopday = today.year-1, 12, 31+today.day-6
+            
         page = 0
         run = True
         
@@ -27,10 +40,14 @@ def scrap_nfu_to_csv():
                     
                     date = postdate.get_text(strip=True)
                     
-                    postmonth = int(date.split('-')[1])
-                    if postmonth < this_month and this_month - postmonth > 3 or postmonth > this_month and this_month+12 - postmonth >3:
+                    postyear,postmonth,postday = map(int, date.split('-'))
+                    if postyear < stopyear:
                         run = False
-                        break            
+                        break
+                    elif postyear == stopyear:
+                        if postmonth < stopmonth or postmonth == today.month and postday < stopday:
+                            run = False
+                            break         
                     
                     content = row.find("td", class_="i-annc__content")
                     title = content.get_text(strip=True)
@@ -76,7 +93,20 @@ def scrap_nfu_to_csv():
 
 def scrap_nfultc_to_csv():
     def __scrap_to_csv() -> None:
-        this_month = datetime.datetime.today().date().month
+        today = datetime.datetime.today().date()
+        monthdays = [0, 31, 28, 31, 30, 31, 30, 31,
+                     31, 30, 31, 30, 31]
+        if today.year%400==0 or today.year%4==0 and today.year%100!=0:
+            monthdays[2] = 29
+        
+        stopyear, stopmonth, stopday = 0,0,0
+        if today.day >= 7:
+            stopyear, stopmonth, stopday = today.year, today.month, today.day-6
+        elif today.month > 1:
+            stopyear, stopmonth, stopday = today.year, today.month, monthdays[today.month-1]+today.day-6
+        else:
+            stopyear, stopmonth, stopday = today.year-1, 12, 31+today.day-6
+        
         page = 0
         run = True
         
@@ -98,10 +128,14 @@ def scrap_nfultc_to_csv():
                     
                     date = postdate.get_text(strip=True)
                     
-                    postmonth = int(date.split('-')[1])
-                    if postmonth < this_month and this_month - postmonth > 3 or postmonth > this_month and this_month+12 - postmonth >3:
+                    postyear,postmonth,postday = map(int, date.split('-'))
+                    if postyear < stopyear:
                         run = False
-                        break            
+                        break
+                    elif postyear == stopyear:
+                        if postmonth < stopmonth or postmonth == today.month and postday < stopday:
+                            run = False
+                            break
                     
                     content = row.find("td", class_="i-annc__content")
                     title = content.get_text(strip=True)
