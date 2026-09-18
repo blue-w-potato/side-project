@@ -3,9 +3,12 @@ from bs4 import BeautifulSoup
 from bs4 import _typing
 import datetime
 
-def scrap_nfu_to_csv():
-    def __scrap_to_csv() -> None:
-        today = datetime.datetime.today().date()
+def __stopdate(today, mode:int):
+    '''
+    mode=1: 一週內
+    mode=2: 三個月內
+    '''
+    def __mode1(today):    
         monthdays = [0, 31, 28, 31, 30, 31, 30, 31,
                      31, 30, 31, 30, 31]
         if today.year%400==0 or today.year%4==0 and today.year%100!=0:
@@ -18,13 +21,34 @@ def scrap_nfu_to_csv():
             stopyear, stopmonth, stopday = today.year, today.month, monthdays[today.month-1]+today.day-6
         else:
             stopyear, stopmonth, stopday = today.year-1, 12, 31+today.day-6
+        
+        return (stopyear,stopmonth,stopday)
+        
+    def __mode2(today):    
+        stopyear, stopmonth, stopday = 0,0,today.day
+        if today.month>3:
+            stopyear, stopmonth = today.year, today.month-3
+        else:
+            stopyear, stopmonth = today.year-1, 12-today.month
+    
+        return (stopyear,stopmonth,stopday)
+    
+    if mode == 1:return __mode1(today)
+    if mode == 2:return __mode2(today)
+
+
+
+def scrap_nfu_to_csv():
+    def __scrap_to_csv() -> None:
+        today = datetime.datetime.today().date()
+        stopyear, stopmonth, stopday = __stopdate(today, 1)
             
         page = 0
         run = True
         
-        with open(file='nfu.csv', mode='wt', encoding='utf-8') as f:
+        with open(file=f'nfu/{today}.csv', mode='wt', encoding='utf-8') as f:
             # 標題列
-            print("\"date\",\"feedsource\",\"title\",\"link\"", end="", file=f)
+            print("\"date\",\"feedsource\",\"title\",\"link\"",file=f)
             # 內容
             data = []
             
@@ -45,13 +69,14 @@ def scrap_nfu_to_csv():
                     date = postdate.get_text(strip=True)
                     
                     postyear,postmonth,postday = map(int, date.split('-'))
+                    
                     if postyear < stopyear:
                         run = False
                         break
                     elif postyear >= stopyear:
                         if postmonth < stopmonth or postmonth == stopmonth and postday < stopday:
                             run = False
-                            break           
+                            break         
                     
                     content = row.find("td", class_="i-annc__content")
                     title = content.get_text(strip=True)
@@ -63,14 +88,15 @@ def scrap_nfu_to_csv():
                     
                     
                     data.append(f"\"{date}\",\"{feedsource}\",\"{title}\",\"{herf}\"")
-                    
+            
             if not(data is None):
                 print()
                 print("\n".join(data), end="", file=f)
 
+
     def __request_page(url:str, headers:dict) -> None:
         response = requests.get(url, headers=headers, verify=False)  # 加上 verify=False 取消憑證檢查
-        # print(response.status_code) # 200 代表請求成功
+        if response.status_code==200: print("連線成功") # 200 代表請求成功
         soup = BeautifulSoup(response.text, "html.parser")
         
         return soup
@@ -102,23 +128,12 @@ def scrap_nfu_to_csv():
 def scrap_nfultc_to_csv():
     def __scrap_to_csv() -> None:
         today = datetime.datetime.today().date()
-        monthdays = [0, 31, 28, 31, 30, 31, 30, 31,
-                     31, 30, 31, 30, 31]
-        if today.year%400==0 or today.year%4==0 and today.year%100!=0:
-            monthdays[2] = 29
-        
-        stopyear, stopmonth, stopday = 0,0,0
-        if today.day >= 7:
-            stopyear, stopmonth, stopday = today.year, today.month, today.day-6
-        elif today.month > 1:
-            stopyear, stopmonth, stopday = today.year, today.month, monthdays[today.month-1]+today.day-6
-        else:
-            stopyear, stopmonth, stopday = today.year-1, 12, 31+today.day-6
+        stopyear, stopmonth, stopday = __stopdate(today, 1)
         
         page = 0
         run = True
         
-        with open(file='nfultc.csv', mode='wt', encoding='utf-8') as f:
+        with open(file=f'nfultc/{today}.csv', mode='wt', encoding='utf-8') as f:
             # 標題列
             print("\"date\",\"feedsource\",\"title\",\"link\"", end="", file=f)
             # 內容
@@ -131,7 +146,6 @@ def scrap_nfultc_to_csv():
                 soup = __request_page(url, headers)
                 tag = __find_tag(soup)
                 
-                # 輸出
                 all_rows = tag.find_all("tr")
                         
                 for row in all_rows:
@@ -145,10 +159,10 @@ def scrap_nfultc_to_csv():
                     if postyear < stopyear:
                         run = False
                         break
-                    elif postyear >= stopyear:
-                        if postmonth < stopmonth or postmonth == stopmonth and postday < stopday:
+                    elif postyear == stopyear:
+                        if postmonth < stopmonth or postmonth == today.month and postday < stopday:
                             run = False
-                            break    
+                            break
                     
                     content = row.find("td", class_="i-annc__content")
                     title = content.get_text(strip=True)
@@ -159,14 +173,14 @@ def scrap_nfultc_to_csv():
                     
                     
                     data.append(f"\"{date}\",\"{title}\",\"{herf}\"")
-                
+            
             if not(data is None):
                 print()
                 print("\n".join(data), end="", file=f)
 
     def __request_page(url:str, headers:dict) -> None:
         response = requests.get(url, headers=headers, verify=False)  # 加上 verify=False 取消憑證檢查
-        # print(response.status_code) # 200 代表請求成功
+        if response.status_code==200:print("連線成功") # 200 代表請求成功
         soup = BeautifulSoup(response.text, "html.parser")
         
         return soup
