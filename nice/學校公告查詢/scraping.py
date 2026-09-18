@@ -44,10 +44,10 @@ def scrap_nfu_to_csv():
                     if postyear < stopyear:
                         run = False
                         break
-                    elif postyear == stopyear:
-                        if postmonth < stopmonth or postmonth == today.month and postday < stopday:
+                    elif postyear >= stopyear:
+                        if postmonth < stopmonth or postmonth == stopmonth and postday < stopday:
                             run = False
-                            break         
+                            break           
                     
                     content = row.find("td", class_="i-annc__content")
                     title = content.get_text(strip=True)
@@ -132,10 +132,10 @@ def scrap_nfultc_to_csv():
                     if postyear < stopyear:
                         run = False
                         break
-                    elif postyear == stopyear:
-                        if postmonth < stopmonth or postmonth == today.month and postday < stopday:
+                    elif postyear >= stopyear:
+                        if postmonth < stopmonth or postmonth == stopmonth and postday < stopday:
                             run = False
-                            break
+                            break    
                     
                     content = row.find("td", class_="i-annc__content")
                     title = content.get_text(strip=True)
