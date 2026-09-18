@@ -31,6 +31,7 @@ def scrap_nfu_to_csv():
                 tag = __find_tag(soup)
                 
                 # 輸出
+                print("\"date\",\"title\",\"link\"", file=f)
                 all_rows = tag.find_all("tr")
                         
                 for row in all_rows:
@@ -119,6 +120,8 @@ def scrap_nfultc_to_csv():
                 tag = __find_tag(soup)
                 
                 # 輸出
+                print("\"date\",\"feedsource\",\"title\",\"link\"", file=f)
+                
                 all_rows = tag.find_all("tr")
                         
                 for row in all_rows:
