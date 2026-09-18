@@ -23,6 +23,9 @@ def scrap_nfu_to_csv():
         run = True
         
         with open(file='nfu.csv', mode='wt', encoding='utf-8') as f:
+            # 標題列
+            print("\"date\",\"feedsource\",\"title\",\"link\"",file=f)
+            
             while run:
                 page += 1
                 url = f"https://www.nfu.edu.tw/zh_tw/ann/adm?page_no={page}&category%5B%5D=68db3e8708577793ef6894cc&tags%5B%5D=all"
@@ -31,7 +34,6 @@ def scrap_nfu_to_csv():
                 tag = __find_tag(soup)
                 
                 # 輸出
-                print("\"date\",\"title\",\"link\"", file=f)
                 all_rows = tag.find_all("tr")
                         
                 for row in all_rows:
@@ -112,6 +114,9 @@ def scrap_nfultc_to_csv():
         run = True
         
         with open(file='nfultc.csv', mode='wt', encoding='utf-8') as f:
+            # 標題列
+            print("\"date\",\"feedsource\",\"title\",\"link\"",file=f)
+            
             while run:
                 page += 1
                 url = f"https://ltc.nfu.edu.tw/zh_tw/news/announcements/2026ann?page_no={page}&"
@@ -120,8 +125,6 @@ def scrap_nfultc_to_csv():
                 tag = __find_tag(soup)
                 
                 # 輸出
-                print("\"date\",\"feedsource\",\"title\",\"link\"", file=f)
-                
                 all_rows = tag.find_all("tr")
                         
                 for row in all_rows:
