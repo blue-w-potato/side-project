@@ -24,7 +24,9 @@ def scrap_nfu_to_csv():
         
         with open(file='nfu.csv', mode='wt', encoding='utf-8') as f:
             # 標題列
-            print("\"date\",\"feedsource\",\"title\",\"link\"",file=f)
+            print("\"date\",\"feedsource\",\"title\",\"link\"", end="", file=f)
+            # 內容
+            data = []
             
             while run:
                 page += 1
@@ -33,7 +35,6 @@ def scrap_nfu_to_csv():
                 soup = __request_page(url, headers)
                 tag = __find_tag(soup)
                 
-                # 輸出
                 all_rows = tag.find_all("tr")
                         
                 for row in all_rows:
@@ -61,7 +62,11 @@ def scrap_nfu_to_csv():
                     herf = "https://nfu.edu.tw"+link["href"]
                     
                     
-                    print(f"\"{date}\",\"{feedsource}\",\"{title}\",\"{herf}\"", file=f)
+                    data.append(f"\"{date}\",\"{feedsource}\",\"{title}\",\"{herf}\"")
+                    
+            if not(data is None):
+                print()
+                print("\n".join(data), end="", file=f)
 
     def __request_page(url:str, headers:dict) -> None:
         response = requests.get(url, headers=headers, verify=False)  # 加上 verify=False 取消憑證檢查
@@ -115,7 +120,9 @@ def scrap_nfultc_to_csv():
         
         with open(file='nfultc.csv', mode='wt', encoding='utf-8') as f:
             # 標題列
-            print("\"date\",\"feedsource\",\"title\",\"link\"",file=f)
+            print("\"date\",\"feedsource\",\"title\",\"link\"", end="", file=f)
+            # 內容
+            data = []
             
             while run:
                 page += 1
@@ -151,7 +158,11 @@ def scrap_nfultc_to_csv():
                     herf = "https://ltc.nfu.edu.tw"+link["href"]
                     
                     
-                    print(f"\"{date}\",\"{title}\",\"{herf}\"", file=f)
+                    data.append(f"\"{date}\",\"{title}\",\"{herf}\"")
+                
+            if not(data is None):
+                print()
+                print("\n".join(data), end="", file=f)
 
     def __request_page(url:str, headers:dict) -> None:
         response = requests.get(url, headers=headers, verify=False)  # 加上 verify=False 取消憑證檢查
