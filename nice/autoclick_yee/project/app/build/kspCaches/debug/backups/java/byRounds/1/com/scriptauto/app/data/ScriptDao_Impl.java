@@ -35,8 +35,6 @@ public final class ScriptDao_Impl implements ScriptDao {
 
   private final EntityInsertionAdapter<ScriptEntity> __insertionAdapterOfScriptEntity;
 
-  private final Converters __converters = new Converters();
-
   private final SharedSQLiteStatement __preparedStmtOfDeleteById;
 
   public ScriptDao_Impl(@NonNull final RoomDatabase __db) {
@@ -45,7 +43,7 @@ public final class ScriptDao_Impl implements ScriptDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `scripts` (`id`,`name`,`orientation`,`componentsJson`,`createdAtEpochMillis`) VALUES (nullif(?, 0),?,?,?,?)";
+        return "INSERT OR REPLACE INTO `scripts` (`id`,`name`,`componentsJson`,`createdAtEpochMillis`) VALUES (nullif(?, 0),?,?,?)";
       }
 
       @Override
@@ -53,10 +51,8 @@ public final class ScriptDao_Impl implements ScriptDao {
           @NonNull final ScriptEntity entity) {
         statement.bindLong(1, entity.getId());
         statement.bindString(2, entity.getName());
-        final String _tmp = __converters.fromOrientation(entity.getOrientation());
-        statement.bindString(3, _tmp);
-        statement.bindString(4, entity.getComponentsJson());
-        statement.bindLong(5, entity.getCreatedAtEpochMillis());
+        statement.bindString(3, entity.getComponentsJson());
+        statement.bindLong(4, entity.getCreatedAtEpochMillis());
       }
     };
     this.__preparedStmtOfDeleteById = new SharedSQLiteStatement(__db) {
@@ -124,7 +120,6 @@ public final class ScriptDao_Impl implements ScriptDao {
         try {
           final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
-          final int _cursorIndexOfOrientation = CursorUtil.getColumnIndexOrThrow(_cursor, "orientation");
           final int _cursorIndexOfComponentsJson = CursorUtil.getColumnIndexOrThrow(_cursor, "componentsJson");
           final int _cursorIndexOfCreatedAtEpochMillis = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAtEpochMillis");
           final List<ScriptEntity> _result = new ArrayList<ScriptEntity>(_cursor.getCount());
@@ -134,15 +129,11 @@ public final class ScriptDao_Impl implements ScriptDao {
             _tmpId = _cursor.getLong(_cursorIndexOfId);
             final String _tmpName;
             _tmpName = _cursor.getString(_cursorIndexOfName);
-            final ScriptOrientation _tmpOrientation;
-            final String _tmp;
-            _tmp = _cursor.getString(_cursorIndexOfOrientation);
-            _tmpOrientation = __converters.toOrientation(_tmp);
             final String _tmpComponentsJson;
             _tmpComponentsJson = _cursor.getString(_cursorIndexOfComponentsJson);
             final long _tmpCreatedAtEpochMillis;
             _tmpCreatedAtEpochMillis = _cursor.getLong(_cursorIndexOfCreatedAtEpochMillis);
-            _item = new ScriptEntity(_tmpId,_tmpName,_tmpOrientation,_tmpComponentsJson,_tmpCreatedAtEpochMillis);
+            _item = new ScriptEntity(_tmpId,_tmpName,_tmpComponentsJson,_tmpCreatedAtEpochMillis);
             _result.add(_item);
           }
           return _result;
@@ -171,7 +162,6 @@ public final class ScriptDao_Impl implements ScriptDao {
         try {
           final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
-          final int _cursorIndexOfOrientation = CursorUtil.getColumnIndexOrThrow(_cursor, "orientation");
           final int _cursorIndexOfComponentsJson = CursorUtil.getColumnIndexOrThrow(_cursor, "componentsJson");
           final int _cursorIndexOfCreatedAtEpochMillis = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAtEpochMillis");
           final List<ScriptEntity> _result = new ArrayList<ScriptEntity>(_cursor.getCount());
@@ -181,15 +171,11 @@ public final class ScriptDao_Impl implements ScriptDao {
             _tmpId = _cursor.getLong(_cursorIndexOfId);
             final String _tmpName;
             _tmpName = _cursor.getString(_cursorIndexOfName);
-            final ScriptOrientation _tmpOrientation;
-            final String _tmp;
-            _tmp = _cursor.getString(_cursorIndexOfOrientation);
-            _tmpOrientation = __converters.toOrientation(_tmp);
             final String _tmpComponentsJson;
             _tmpComponentsJson = _cursor.getString(_cursorIndexOfComponentsJson);
             final long _tmpCreatedAtEpochMillis;
             _tmpCreatedAtEpochMillis = _cursor.getLong(_cursorIndexOfCreatedAtEpochMillis);
-            _item = new ScriptEntity(_tmpId,_tmpName,_tmpOrientation,_tmpComponentsJson,_tmpCreatedAtEpochMillis);
+            _item = new ScriptEntity(_tmpId,_tmpName,_tmpComponentsJson,_tmpCreatedAtEpochMillis);
             _result.add(_item);
           }
           return _result;
@@ -216,7 +202,6 @@ public final class ScriptDao_Impl implements ScriptDao {
         try {
           final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
-          final int _cursorIndexOfOrientation = CursorUtil.getColumnIndexOrThrow(_cursor, "orientation");
           final int _cursorIndexOfComponentsJson = CursorUtil.getColumnIndexOrThrow(_cursor, "componentsJson");
           final int _cursorIndexOfCreatedAtEpochMillis = CursorUtil.getColumnIndexOrThrow(_cursor, "createdAtEpochMillis");
           final ScriptEntity _result;
@@ -225,15 +210,11 @@ public final class ScriptDao_Impl implements ScriptDao {
             _tmpId = _cursor.getLong(_cursorIndexOfId);
             final String _tmpName;
             _tmpName = _cursor.getString(_cursorIndexOfName);
-            final ScriptOrientation _tmpOrientation;
-            final String _tmp;
-            _tmp = _cursor.getString(_cursorIndexOfOrientation);
-            _tmpOrientation = __converters.toOrientation(_tmp);
             final String _tmpComponentsJson;
             _tmpComponentsJson = _cursor.getString(_cursorIndexOfComponentsJson);
             final long _tmpCreatedAtEpochMillis;
             _tmpCreatedAtEpochMillis = _cursor.getLong(_cursorIndexOfCreatedAtEpochMillis);
-            _result = new ScriptEntity(_tmpId,_tmpName,_tmpOrientation,_tmpComponentsJson,_tmpCreatedAtEpochMillis);
+            _result = new ScriptEntity(_tmpId,_tmpName,_tmpComponentsJson,_tmpCreatedAtEpochMillis);
           } else {
             _result = null;
           }

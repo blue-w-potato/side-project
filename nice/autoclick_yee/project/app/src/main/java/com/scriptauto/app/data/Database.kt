@@ -12,7 +12,6 @@ private val json = Json { ignoreUnknownKeys = true }
 data class ScriptEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
-    val orientation: ScriptOrientation,
     /** 序列化後的 List<ScriptComponent>,見 CONTEXT.md 元件定義 */
     val componentsJson: String,
     val createdAtEpochMillis: Long,
@@ -20,7 +19,6 @@ data class ScriptEntity(
     fun toRecord(): ScriptRecord = ScriptRecord(
         id = id,
         name = name,
-        orientation = orientation,
         components = json.decodeFromString(componentsJson),
         createdAtEpochMillis = createdAtEpochMillis,
     )
@@ -29,19 +27,10 @@ data class ScriptEntity(
         fun fromRecord(record: ScriptRecord): ScriptEntity = ScriptEntity(
             id = record.id,
             name = record.name,
-            orientation = record.orientation,
             componentsJson = json.encodeToString(record.components),
             createdAtEpochMillis = record.createdAtEpochMillis,
         )
     }
-}
-
-class Converters {
-    @TypeConverter
-    fun fromOrientation(value: ScriptOrientation): String = value.name
-
-    @TypeConverter
-    fun toOrientation(value: String): ScriptOrientation = ScriptOrientation.valueOf(value)
 }
 
 @Dao
@@ -63,8 +52,11 @@ interface ScriptDao {
     suspend fun deleteById(id: Long)
 }
 
-@Database(entities = [ScriptEntity::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+/**
+ * version = 2:移除 orientation 欄位(不再區分橫式/直式)。
+ * 這個專案還在開發階段、資料可以重來,直接用 destructive migration(見 ScriptAutoApp.kt),不寫遷移邏輯。
+ */
+@Database(entities = [ScriptEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun scriptDao(): ScriptDao
 }

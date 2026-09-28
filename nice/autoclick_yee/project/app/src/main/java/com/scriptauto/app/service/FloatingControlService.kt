@@ -25,7 +25,6 @@ import android.os.Looper
 sealed class StartScriptOutcome {
     data object Started : StartScriptOutcome()
     data object AlreadyRunningAnotherScript : StartScriptOutcome() // Q9
-    data object OrientationMismatch : StartScriptOutcome() // Q26
     data object AccessibilityServiceNotConnected : StartScriptOutcome() // 無障礙服務尚未啟用/連線
 }
 
@@ -103,7 +102,6 @@ class FloatingControlService : Service() {
     private fun outcomeMessage(outcome: StartScriptOutcome): String = when (outcome) {
         StartScriptOutcome.Started -> ""
         StartScriptOutcome.AlreadyRunningAnotherScript -> "已經有腳本正在使用懸浮視窗"
-        StartScriptOutcome.OrientationMismatch -> "裝置目前方向跟腳本記錄的方向不符,請切換方向後再啟動"
         StartScriptOutcome.AccessibilityServiceNotConnected -> "無障礙服務尚未連線,請到系統設定確認已開啟"
     }
 
@@ -133,9 +131,6 @@ class FloatingControlService : Service() {
     fun tryStart(script: ScriptRecord, resolver: CoordinateResolver): StartScriptOutcome {
         if (isAnyScriptActive()) {
             return StartScriptOutcome.AlreadyRunningAnotherScript
-        }
-        if (!resolver.matchesOrientation(script.orientation)) {
-            return StartScriptOutcome.OrientationMismatch
         }
         val service = AutomationAccessibilityService.instance
             ?: return StartScriptOutcome.AccessibilityServiceNotConnected

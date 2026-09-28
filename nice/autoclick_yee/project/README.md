@@ -1,6 +1,6 @@
 # 專案進度
 
-依照 `CONTEXT.md` 與 `docs/adr/` 中確認的決策,**原始規格描述的整條主線流程都已經串起來了**:主頁 → 新建腳本(橫式/直式)→ 編排(拖曳定位、屬性設定、序列排序)→ 儲存 → 已建立的腳本列表(刪除/編輯/啟動)→ 懸浮視窗(顯示/隱藏元件圖示、執行/中止、結束)。
+依照 `CONTEXT.md` 與 `docs/adr/` 中確認的決策,**原始規格描述的整條主線流程都已經串起來了**:主頁 → 新建腳本 → 編排(拖曳定位、屬性設定、序列排序)→ 儲存 → 已建立的腳本列表(刪除/編輯/啟動)→ 懸浮視窗(顯示/隱藏元件圖示、執行/中止、結束)。
 
 ## 已完成
 
@@ -15,7 +15,7 @@
   - 「顯示元件圖示」會把腳本中所有有位置屬性的元件,依 `CoordinateResolver.toPixel` 換算成裝置實際座標,疊加成一堆不可互動、不攔截觸控的小色塊(`FLAG_NOT_TOUCHABLE`)
   - 「結束」會移除所有 overlay view、清除 `InUseScriptTracker` 的使用中標記、停止 Service
 - `PermissionGate.kt` + `MainActivity.kt` — 權限檢查(Q25、Q23)+ Compose Navigation 串起全部畫面
-- `ui/HomeScreen.kt`、`ui/NewScriptOrientationScreen.kt`、`ui/EditorScreen.kt` 系列、`ui/ScriptListScreen.kt` 系列 — 全部畫面已組裝並接上導覽
+- `ui/HomeScreen.kt`、`ui/EditorScreen.kt` 系列、`ui/ScriptListScreen.kt` 系列 — 全部畫面已組裝並接上導覽(新建腳本已移除橫式/直式選擇,直接進編排畫面)
 
 ## 已知限制 / 可以再打磨的地方
 

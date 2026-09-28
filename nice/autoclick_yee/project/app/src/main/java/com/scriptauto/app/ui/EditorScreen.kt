@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scriptauto.app.data.RelativePosition
 import com.scriptauto.app.data.ScriptComponent
-import com.scriptauto.app.data.ScriptOrientation
 import com.scriptauto.app.data.ScriptRepository
 import com.scriptauto.app.data.hasCanvasIcon
 import kotlin.math.roundToInt
@@ -30,13 +29,12 @@ private fun clamp01(v: Float): Float = v.coerceIn(0f, 1f)
 
 @Composable
 fun EditorScreen(
-    orientation: ScriptOrientation,
     scriptId: Long?,
     repository: ScriptRepository,
     onLeave: () -> Unit,
     onSaved: () -> Unit,
 ) {
-    val vm: EditorViewModel = viewModel(factory = EditorViewModelFactory(repository, orientation, scriptId))
+    val vm: EditorViewModel = viewModel(factory = EditorViewModelFactory(repository, scriptId))
 
     BackHandler { vm.requestLeave(onLeave) } // 系統返回鍵與左側欄退回鍵行為一致(Q24)
 
@@ -110,7 +108,7 @@ fun EditorScreen(
             ) {
                 SequencePanel(
                     items = vm.items,
-                    onReorder = { from, to -> vm.moveInSequence(from, to) },
+                    onDragBy = { uiId, deltaSteps -> vm.moveItemBy(uiId, deltaSteps) },
                     onItemTap = { uiId -> vm.openPopup(uiId) },
                     onSave = { vm.requestSave() },
                     onCollapse = { vm.toggleRightPanel() },

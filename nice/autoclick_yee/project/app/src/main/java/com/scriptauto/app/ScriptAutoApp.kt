@@ -12,7 +12,9 @@ class ScriptAutoApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val db = Room.databaseBuilder(this, AppDatabase::class.java, "script_auto.db").build()
+        val db = Room.databaseBuilder(this, AppDatabase::class.java, "script_auto.db")
+            .fallbackToDestructiveMigration()
+            .build()
         repository = ScriptRepository(db.scriptDao())
     }
 }

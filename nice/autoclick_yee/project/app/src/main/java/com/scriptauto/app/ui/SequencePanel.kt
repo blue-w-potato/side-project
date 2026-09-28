@@ -1,8 +1,8 @@
 package com.scriptauto.app.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,13 +13,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.scriptauto.app.data.ComponentColor
 import com.scriptauto.app.data.ScriptComponent
+import kotlin.math.abs
 import kotlin.math.roundToInt
+
+private const val TAP_SLOP_PX = 12f
 
 private fun ComponentColor.toComposeColor(): Color = Color(android.graphics.Color.parseColor(hex))
 
@@ -34,11 +38,15 @@ private fun componentLabel(c: ScriptComponent): String = when (c) {
 @Composable
 fun SequencePanel(
     items: List<EditorItem>,
-    onReorder: (from: Int, to: Int) -> Unit,
+    onDragBy: (uiId: Int, deltaSteps: Int) -> Unit,
     onItemTap: (Int) -> Unit,
     onSave: () -> Unit,
     onCollapse: () -> Unit,
 ) {
+    var itemHeightPx by remember { mutableStateOf(1) }
+    var draggingUiId by remember { mutableStateOf<Int?>(null) }
+    var dragOffsetPx by remember { mutableStateOf(0f) }
+
     Column(modifier = Modifier.fillMaxHeight().width(220.dp).background(Color(0xFF1C1C1C))) {
         Row(
             modifier = Modifier
@@ -53,13 +61,28 @@ fun SequencePanel(
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(items, key = { it.uiId }) { item ->
                 val index = items.indexOf(item)
+                val isDragging = draggingUiId == item.uiId
                 SequenceBlock(
                     item = item,
                     index = index,
-                    totalCount = items.size,
-                    onDragBy = { deltaSteps ->
-                        val target = (index + deltaSteps).coerceIn(0, items.lastIndex)
-                        if (target != index) onReorder(index, target)
+                    offsetPxWhileDragging = if (isDragging) dragOffsetPx else 0f,
+                    isDragging = isDragging,
+                    onMeasuredHeight = { h -> if (itemHeightPx <= 1) itemHeightPx = h },
+                    onDragStart = {
+                        draggingUiId = item.uiId
+                        dragOffsetPx = 0f
+                    },
+                    onDragDelta = { dy ->
+                        dragOffsetPx += dy
+                        val steps = (dragOffsetPx / itemHeightPx).roundToInt()
+                        if (steps != 0) {
+                            onDragBy(item.uiId, steps)
+                            dragOffsetPx -= steps * itemHeightPx
+                        }
+                    },
+                    onDragEnd = {
+                        draggingUiId = null
+                        dragOffsetPx = 0f
                     },
                     onTap = { onItemTap(item.uiId) },
                 )
@@ -76,33 +99,40 @@ fun SequencePanel(
 private fun SequenceBlock(
     item: EditorItem,
     index: Int,
-    totalCount: Int,
-    onDragBy: (Int) -> Unit,
+    offsetPxWhileDragging: Float,
+    isDragging: Boolean,
+    onMeasuredHeight: (Int) -> Unit,
+    onDragStart: () -> Unit,
+    onDragDelta: (Float) -> Unit,
+    onDragEnd: () -> Unit,
     onTap: () -> Unit,
 ) {
-    var heightPx by remember { mutableStateOf(1) }
-    var accumulated by remember { mutableStateOf(0f) }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 4.dp)
-            .onSizeChanged { heightPx = it.height.coerceAtLeast(1) }
+            .offset { IntOffset(0, offsetPxWhileDragging.roundToInt()) }
+            .zIndex(if (isDragging) 1f else 0f)
+            .onSizeChanged { onMeasuredHeight(it.height.coerceAtLeast(1)) }
             .background(item.component.color.toComposeColor(), RoundedCornerShape(6.dp))
             .padding(10.dp)
-            .clickable(onClick = onTap)
             .pointerInput(item.uiId) {
-                detectDragGesturesAfterLongPress(
-                    onDragStart = { accumulated = 0f },
+                var totalDrag = 0f
+                detectDragGestures(
+                    onDragStart = {
+                        totalDrag = 0f
+                        onDragStart()
+                    },
                     onDrag = { change, dragAmount ->
                         change.consume()
-                        accumulated += dragAmount.y
-                        val steps = (accumulated / heightPx).roundToInt()
-                        if (steps != 0) {
-                            onDragBy(steps)
-                            accumulated -= steps * heightPx
-                        }
+                        totalDrag += abs(dragAmount.y) + abs(dragAmount.x)
+                        onDragDelta(dragAmount.y)
                     },
+                    onDragEnd = {
+                        if (totalDrag < TAP_SLOP_PX) onTap()
+                        onDragEnd()
+                    },
+                    onDragCancel = { onDragEnd() },
                 )
             },
     ) {

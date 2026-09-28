@@ -4,10 +4,11 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.view.accessibility.AccessibilityEvent
+import android.util.Log
 import com.scriptauto.app.data.RelativePosition
 import com.scriptauto.app.data.ScriptComponent
-import com.scriptauto.app.data.ScriptOrientation
 import com.scriptauto.app.data.ScriptRecord
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.random.Random
 
 /**
@@ -35,28 +36,46 @@ class AutomationAccessibilityService : AccessibilityService() {
         super.onDestroy()
     }
 
-    fun dispatchTap(xPx: Float, yPx: Float, durationMs: Long = 50, onDone: () -> Unit) {
+    /** 真正等到系統回報手勢執行完成(或被中斷)才 resume,而不是派送出去就當作完成 */
+    private suspend fun dispatchAndAwait(gesture: GestureDescription): Boolean =
+        suspendCancellableCoroutine { continuation ->
+            val callback = object : GestureResultCallback() {
+                override fun onCompleted(gestureDescription: GestureDescription?) {
+                    Log.d("ScriptAuto", "手勢執行完成 onCompleted")
+                    if (continuation.isActive) continuation.resume(true) {}
+                }
+                override fun onCancelled(gestureDescription: GestureDescription?) {
+                    Log.w("ScriptAuto", "手勢被系統取消 onCancelled(可能是同時有其他手勢正在進行,或目標位置無法接受手勢)")
+                    if (continuation.isActive) continuation.resume(false) {}
+                }
+            }
+            val accepted = dispatchGesture(gesture, callback, null)
+            Log.d("ScriptAuto", "dispatchGesture 呼叫結果 accepted=$accepted")
+            if (!accepted && continuation.isActive) {
+                Log.w("ScriptAuto", "手勢沒有被系統接受(accepted=false),可能是無障礙服務還沒真正連線,或裝置目前狀態不允許手勢注入")
+                continuation.resume(false) {}
+            }
+        }
+
+    suspend fun dispatchTap(xPx: Float, yPx: Float, durationMs: Long = 50): Boolean {
         val path = Path().apply { moveTo(xPx, yPx) }
         val stroke = GestureDescription.StrokeDescription(path, 0, durationMs)
-        dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
-        onDone()
+        return dispatchAndAwait(GestureDescription.Builder().addStroke(stroke).build())
     }
 
-    fun dispatchHold(xPx: Float, yPx: Float, durationMs: Long, onDone: () -> Unit) {
+    suspend fun dispatchHold(xPx: Float, yPx: Float, durationMs: Long): Boolean {
         val path = Path().apply { moveTo(xPx, yPx) }
         val stroke = GestureDescription.StrokeDescription(path, 0, durationMs)
-        dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
-        onDone()
+        return dispatchAndAwait(GestureDescription.Builder().addStroke(stroke).build())
     }
 
-    fun dispatchDrag(startX: Float, startY: Float, endX: Float, endY: Float, durationMs: Long, onDone: () -> Unit) {
+    suspend fun dispatchDrag(startX: Float, startY: Float, endX: Float, endY: Float, durationMs: Long): Boolean {
         val path = Path().apply {
             moveTo(startX, startY)
             lineTo(endX, endY)
         }
         val stroke = GestureDescription.StrokeDescription(path, 0, durationMs)
-        dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
-        onDone()
+        return dispatchAndAwait(GestureDescription.Builder().addStroke(stroke).build())
     }
 }
 
@@ -87,15 +106,6 @@ class CoordinateResolver(
         val dx = (r * Math.cos(angle)).toFloat()
         val dy = (r * Math.sin(angle)).toFloat()
         return (baseX + dx) to (baseY + dy)
-    }
-
-    /** 啟動前的方向一致性檢查(ADR-0002 / Q26) */
-    fun matchesOrientation(recorded: ScriptOrientation): Boolean {
-        val isCurrentlyLandscape = screenWidthPx > screenHeightPx
-        return when (recorded) {
-            ScriptOrientation.LANDSCAPE -> isCurrentlyLandscape
-            ScriptOrientation.PORTRAIT -> !isCurrentlyLandscape
-        }
     }
 }
 
@@ -130,11 +140,21 @@ class ScriptExecutor(
                 is ScriptComponent.Drag -> runDrag(component)
                 is ScriptComponent.Wait -> kotlinx.coroutines.delay(component.durationMs.toLong())
                 is ScriptComponent.Hold -> runHold(component)
-                is ScriptComponent.SubScript -> {
-                    val sub = resolveSubScript(component.referencedScriptId) ?: continue
-                    executeSequence(sub.components.sortedBy { it.sequenceIndex })
-                }
+                is ScriptComponent.SubScript -> runSubScript(component)
             }
+        }
+    }
+
+    private suspend fun runSubScript(c: ScriptComponent.SubScript) {
+        val sub = resolveSubScript(c.referencedScriptId) ?: return
+        val limit = when (val lc = c.loopCount) {
+            is com.scriptauto.app.data.LoopCount.Infinite -> Int.MAX_VALUE
+            is com.scriptauto.app.data.LoopCount.Fixed -> lc.count
+        }
+        var count = 0
+        while (!isAborted && count < limit) {
+            executeSequence(sub.components.sortedBy { it.sequenceIndex })
+            count++
         }
     }
 
@@ -144,23 +164,25 @@ class ScriptExecutor(
             is com.scriptauto.app.data.LoopCount.Infinite -> Int.MAX_VALUE
             is com.scriptauto.app.data.LoopCount.Fixed -> lc.count
         }
+        android.util.Log.d("ScriptAuto", "開始執行循環點擊,原始相對位置=(${c.position.xPercent}, ${c.position.yPercent})")
         while (!isAborted && count < limit) {
             val (x, y) = resolver.resolve(c.position, c.jitterRadiusMm)
-            var done = false
-            service.dispatchTap(x, y) { done = true }
+            android.util.Log.d("ScriptAuto", "第${count + 1}次點擊,換算後裝置座標=($x, $y)")
+            service.dispatchTap(x, y)
             kotlinx.coroutines.delay(c.intervalMs.toLong())
             count++
         }
+        android.util.Log.d("ScriptAuto", "循環點擊結束,共執行 $count 次(isAborted=$isAborted)")
     }
 
     private suspend fun runHold(c: ScriptComponent.Hold) {
         val (x, y) = resolver.resolve(c.position, 0)
-        service.dispatchHold(x, y, c.durationMs.toLong()) {}
+        service.dispatchHold(x, y, c.durationMs.toLong())
     }
 
     private suspend fun runDrag(c: ScriptComponent.Drag) {
         val (sx, sy) = resolver.resolve(c.start.position, c.start.jitterRadiusMm)
         val (ex, ey) = resolver.resolve(c.end.position, c.end.jitterRadiusMm)
-        service.dispatchDrag(sx, sy, ex, ey, c.durationMs.toLong()) {}
+        service.dispatchDrag(sx, sy, ex, ey, c.durationMs.toLong())
     }
 }

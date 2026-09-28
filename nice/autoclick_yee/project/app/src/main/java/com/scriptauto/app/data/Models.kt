@@ -29,10 +29,6 @@ fun RelativePosition.shiftBy(dxPx: Float, dyPx: Float, canvasWidthPx: Float, can
     return RelativePosition(newX, newY)
 }
 
-/** 腳本建立時選定的方向,編排中不可切換;啟動前需與裝置實際方向比對,見 ADR-0002 */
-@Serializable
-enum class ScriptOrientation { PORTRAIT, LANDSCAPE }
-
 @Serializable
 sealed class LoopCount {
     @Serializable
@@ -112,11 +108,12 @@ sealed class ScriptComponent {
         init { require(durationMs >= 0) { "時長不可為負" } }
     }
 
-    /** 引用另一筆已儲存腳本;選取清單需排除自身,見 CONTEXT.md「其他腳本(元件)」 */
+    /** 引用另一筆已儲存腳本;選取清單需排除自身,見 CONTEXT.md「其他腳本(元件)」。可設定重複執行次數。 */
     @Serializable
     data class SubScript(
         override val sequenceIndex: Int,
         val referencedScriptId: Long,
+        val loopCount: LoopCount = LoopCount.Fixed(1),
         override val color: ComponentColor = ComponentColor.GREEN,
     ) : ScriptComponent()
 }
@@ -139,7 +136,6 @@ fun ScriptComponent.hasCanvasIcon(): Boolean = when (this) {
 data class ScriptRecord(
     val id: Long = 0,
     val name: String,
-    val orientation: ScriptOrientation,
     val components: List<ScriptComponent>,
     val createdAtEpochMillis: Long,
 ) {

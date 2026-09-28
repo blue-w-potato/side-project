@@ -14,7 +14,6 @@ enum class ComponentKind { LOOP_TAP, DRAG, WAIT, HOLD, SUB_SCRIPT }
 
 class EditorViewModel(
     private val repository: ScriptRepository,
-    val orientation: ScriptOrientation,
     private val existingScriptId: Long?,
 ) : ViewModel() {
 
@@ -116,11 +115,14 @@ class EditorViewModel(
         hasUnsavedChanges.value = true
     }
 
-    /** 右側欄序列重新排序(拖曳積木改變順序) */
-    fun moveInSequence(from: Int, to: Int) {
-        if (from == to || from !in items.indices || to !in items.indices) return
-        val item = items.removeAt(from)
-        items.add(to, item)
+    /** 右側欄序列重新排序(拖曳積木改變順序);用 uiId 即時查詢目前位置,避免用到過時的索引 */
+    fun moveItemBy(uiId: Int, deltaSteps: Int) {
+        val currentIndex = items.indexOfFirst { it.uiId == uiId }
+        if (currentIndex == -1) return
+        val target = (currentIndex + deltaSteps).coerceIn(0, items.lastIndex)
+        if (target == currentIndex) return
+        val item = items.removeAt(currentIndex)
+        items.add(target, item)
         renumber()
         hasUnsavedChanges.value = true
     }
@@ -201,7 +203,6 @@ class EditorViewModel(
             val record = ScriptRecordDraft.build(
                 id = existingScriptId ?: 0,
                 name = name,
-                orientation = orientation,
                 items = items,
                 createdAtEpochMillis = System.currentTimeMillis(),
             )
@@ -225,7 +226,6 @@ private object ScriptRecordDraft {
     fun build(
         id: Long,
         name: String,
-        orientation: ScriptOrientation,
         items: List<EditorItem>,
         createdAtEpochMillis: Long,
     ): ScriptRecord? {
@@ -233,7 +233,6 @@ private object ScriptRecordDraft {
         return ScriptRecord(
             id = id,
             name = name,
-            orientation = orientation,
             components = items.mapIndexed { index, item -> item.component.withSequenceIndex(index) },
             createdAtEpochMillis = createdAtEpochMillis,
         )

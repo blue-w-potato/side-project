@@ -180,6 +180,9 @@ private fun SubScriptFields(
     submit: (ScriptComponent, String?) -> Unit,
 ) {
     var selectedId by remember { mutableStateOf(c.referencedScriptId) }
+    var infinite by remember { mutableStateOf(c.loopCount is LoopCount.Infinite) }
+    var count by remember { mutableStateOf((c.loopCount as? LoopCount.Fixed)?.count ?: 1) }
+
     Text("其他腳本")
     if (choices.isEmpty()) {
         Text("目前沒有其他已儲存的腳本可以引用")
@@ -191,8 +194,29 @@ private fun SubScriptFields(
             }
         }
     }
+    Text("循環次數")
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        RadioButton(selected = infinite, onClick = { infinite = true })
+        Text("無限")
+        Spacer(Modifier.width(12.dp))
+        RadioButton(selected = !infinite, onClick = { infinite = false })
+        Text("使用者輸入")
+    }
+    if (!infinite) {
+        IntField("循環次數(1..1,000,000)", count) { it?.let { v -> count = v } }
+    }
     Button(
         enabled = choices.isNotEmpty(),
-        onClick = { submit(c.copy(referencedScriptId = selectedId), null) },
+        onClick = {
+            val result = try {
+                c.copy(
+                    referencedScriptId = selectedId,
+                    loopCount = if (infinite) LoopCount.Infinite else LoopCount.Fixed(count),
+                ) to null
+            } catch (e: IllegalArgumentException) {
+                null to (e.message ?: "數值不合規定")
+            }
+            if (result.first != null) submit(result.first!!, null) else submit(c, result.second)
+        },
     ) { Text("確定") }
 }

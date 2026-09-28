@@ -15,10 +15,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.scriptauto.app.data.ScriptOrientation
 import com.scriptauto.app.ui.EditorScreen
 import com.scriptauto.app.ui.HomeScreen
-import com.scriptauto.app.ui.NewScriptOrientationScreen
 import com.scriptauto.app.ui.Screen
 
 class MainActivity : ComponentActivity() {
@@ -94,14 +92,8 @@ private fun AppNavHost(
         composable(Screen.Home.route) {
             HomeScreen(
                 onOpenScriptList = { navController.navigate(Screen.ScriptList.route) },
-                onNewScript = { navController.navigate(Screen.NewScriptOrientation.route) },
-            )
-        }
-        composable(Screen.NewScriptOrientation.route) {
-            NewScriptOrientationScreen(
-                onOrientationChosen = { orientation ->
-                    navController.navigate(Screen.Editor.buildRoute(orientation.name))
-                },
+                // 已移除橫式/直式選擇,新建腳本直接進編排畫面(scriptId 為 null)
+                onNewScript = { navController.navigate(Screen.Editor.buildRoute()) },
             )
         }
         composable(Screen.ScriptList.route) {
@@ -109,23 +101,18 @@ private fun AppNavHost(
                 repository = repository,
                 onBack = { navController.popBackStack() },
                 onEdit = { script ->
-                    navController.navigate(Screen.Editor.buildRoute(script.orientation.name, script.id))
+                    navController.navigate(Screen.Editor.buildRoute(script.id))
                 },
             )
         }
         composable(
             route = Screen.Editor.route,
             arguments = listOf(
-                navArgument("orientation") { type = NavType.StringType },
                 navArgument("scriptId") { type = NavType.StringType; nullable = true; defaultValue = null },
             ),
         ) { backStackEntry ->
-            val orientation = ScriptOrientation.valueOf(
-                backStackEntry.arguments?.getString("orientation") ?: ScriptOrientation.PORTRAIT.name,
-            )
             val scriptId = backStackEntry.arguments?.getString("scriptId")?.toLongOrNull()
             EditorScreen(
-                orientation = orientation,
                 scriptId = scriptId,
                 repository = repository,
                 onLeave = { navController.popBackStack(Screen.Home.route, inclusive = false) },
@@ -136,4 +123,3 @@ private fun AppNavHost(
         }
     }
 }
-

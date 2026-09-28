@@ -4,19 +4,22 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 
 /**
- * 懸浮視窗的實際畫面:一個固定在畫面右上角的控制列(三個按鍵),
+ * 懸浮視窗的實際畫面:一個可以拖曳移動位置的控制列(三個按鍵 + 一個拖曳把手),
  * 以及「顯示元件圖示」時疊加在最上層的一堆小圓點(沒有互動功能,見原始規格)。
  */
 class FloatingOverlayController(private val context: Context) {
 
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var controlView: LinearLayout? = null
+    private var controlParams: WindowManager.LayoutParams? = null
     private lateinit var iconsButton: Button
     private lateinit var runButton: Button
     private val iconDots = mutableListOf<View>()
@@ -31,7 +34,14 @@ class FloatingOverlayController(private val context: Context) {
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             setBackgroundColor(Color.parseColor("#CC222222"))
-            setPadding(20, 16, 20, 16)
+            setPadding(12, 16, 20, 16)
+        }
+
+        val dragHandle = TextView(context).apply {
+            text = "⠿"
+            setTextColor(Color.WHITE)
+            textSize = 20f
+            setPadding(16, 0, 24, 0)
         }
         iconsButton = Button(context).apply {
             text = "顯示元件圖示" // 預設不顯示元件圖示(原始規格)
@@ -45,10 +55,12 @@ class FloatingOverlayController(private val context: Context) {
             text = "結束"
             setOnClickListener { onExit() }
         }
+        layout.addView(dragHandle)
         layout.addView(iconsButton)
         layout.addView(runButton)
         layout.addView(exitButton)
 
+        // 用 TOP|START(以左上角為原點)而不是 TOP|END,拖曳位移的加減法才直覺、不會反向
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -56,12 +68,37 @@ class FloatingOverlayController(private val context: Context) {
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT,
         ).apply {
-            gravity = Gravity.TOP or Gravity.END
+            gravity = Gravity.TOP or Gravity.START
             x = 16
             y = 120
         }
+
+        var initialX = 0
+        var initialY = 0
+        var initialTouchX = 0f
+        var initialTouchY = 0f
+        dragHandle.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    initialX = params.x
+                    initialY = params.y
+                    initialTouchX = event.rawX
+                    initialTouchY = event.rawY
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    params.x = initialX + (event.rawX - initialTouchX).toInt()
+                    params.y = initialY + (event.rawY - initialTouchY).toInt()
+                    runCatching { windowManager.updateViewLayout(layout, params) }
+                    true
+                }
+                else -> false
+            }
+        }
+
         windowManager.addView(layout, params)
         controlView = layout
+        controlParams = params
     }
 
     fun setIconsButtonLabel(visible: Boolean) {
@@ -105,5 +142,6 @@ class FloatingOverlayController(private val context: Context) {
         hideComponentIcons()
         controlView?.let { runCatching { windowManager.removeView(it) } }
         controlView = null
+        controlParams = null
     }
 }
